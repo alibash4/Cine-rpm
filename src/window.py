@@ -1165,7 +1165,7 @@ class CineWindow(Adw.ApplicationWindow):
         GLib.timeout_add(100, self.drop_icon.set_from_icon_name, "")
         GLib.timeout_add(100, self.drop_label.set_text, "")
 
-    def _on_drop(self, _target, value, _x, _y, from_playlist=False):
+    def _on_drop(self, _target, value, _x, _y):
         first_file = True
 
         items: list[Gio.File] | list[str] = (
@@ -1204,7 +1204,7 @@ class CineWindow(Adw.ApplicationWindow):
 
                 name = cast(str, item.get_basename()).lower()
                 if name.endswith(SUB_EXTS):
-                    if not self.mpv.idle_active and not from_playlist:
+                    if not self.mpv.idle_active:
                         self.mpv.command("sub-add", path, "select")
                     continue
 
