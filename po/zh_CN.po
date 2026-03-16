@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: io.github.diegopvlk.Cine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-14 15:35-0300\n"
-"PO-Revision-Date: 2026-03-12 12:52+0000\n"
+"PO-Revision-Date: 2026-03-17 11:09+0000\n"
 "Last-Translator: 心就在那里 <xjznlonly@gmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://hosted.weblate.org/"
 "projects/cine/app/zh_Hans/>\n"
@@ -379,7 +379,7 @@ msgstr "无"
 
 #: src/window.py:520 src/window.blp:119
 msgid "Add Audio Track"
-msgstr "添加音轨"
+msgstr "添加音频轨道"
 
 #: src/window.py:559
 msgid "Track"
