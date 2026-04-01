@@ -1735,7 +1735,10 @@ class CineWindow(Adw.ApplicationWindow):
 
         @self.mpv.property_observer("sub-scale")
         def on_sub_scale_change(_name, value):
-            settings.set_double("subtitle-scale", value)
+            def set_sett_scale():
+                settings.set_double("subtitle-scale", value)
+
+            GLib.idle_add(set_sett_scale)
 
         @self.mpv.property_observer("sub-visibility")
         @self.mpv.property_observer("sid")
