@@ -125,7 +125,7 @@ scale mark {
 }
 
 .icon-indicator {
-  -gtk-icon-size: 72px;
+  -gtk-icon-size: 64px;
   -gtk-icon-shadow: 0px 1px 9px rgba(0, 0, 0, 0.66);
   color: white;
 }
