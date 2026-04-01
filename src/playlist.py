@@ -221,10 +221,10 @@ class Playlist(Adw.Dialog):
         self._populate_list(scroll=False)
 
     def _on_row_right_click(self, gesture, _n_press, x, y, path):
-        def show_in_folder(parent_window, fuse_path):
-            gfile = Gio.File.new_for_path(fuse_path)
+        def show_in_folder():
+            gfile = Gio.File.new_for_path(path)
             launcher = Gtk.FileLauncher.new(gfile)
-            launcher.open_containing_folder(parent_window, None, on_launch_finished)
+            launcher.open_containing_folder(self.win, None, on_launch_finished)
 
         def on_launch_finished(launcher, result):
             try:
@@ -250,9 +250,10 @@ class Playlist(Adw.Dialog):
 
         action_group = Gio.SimpleActionGroup.new()
 
-        open_location = Gio.SimpleAction.new("open_location", None)
-        open_location.connect("activate", lambda *_: show_in_folder(self.win, path))
-        action_group.add_action(open_location)
+        if is_local_path(path):
+            open_location = Gio.SimpleAction.new("open_location", None)
+            open_location.connect("activate", lambda *_: show_in_folder())
+            action_group.add_action(open_location)
 
         remove_item = Gio.SimpleAction.new("remove_item", None)
         remove_item.connect("activate", lambda *_: remove_from_playlist(index))
