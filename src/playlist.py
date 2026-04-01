@@ -129,12 +129,12 @@ class Playlist(Adw.Dialog):
         self._populate_list()
         self.spinner.set_visible(False)
 
-    def _populate_list(self):
+    def _populate_list(self, scroll=True):
         self.playlist_list_box.remove_all()
         playlist = self.mpv.playlist
 
         for index, item in enumerate(playlist):
-            path = item.get("filename", "")
+            path = item.get("filename")
             name_with_ext = os.path.basename(path)
             parent_dir = os.path.basename(os.path.dirname(path))
             dir = parent_dir if parent_dir else path
@@ -182,9 +182,89 @@ class Playlist(Adw.Dialog):
             row.set_subtitle(file_title)
             row.set_icon_name(icon_name)
             row.connect("activated", self._on_file_activated, index)
+
+            gesture = Gtk.GestureClick.new()
+            gesture.set_button(3)
+            gesture.connect("pressed", self._on_row_right_click, path)
+            row.add_controller(gesture)
+
+            row_drag_source = Gtk.DragSource.new()
+            row_drag_source.set_actions(Gdk.DragAction.MOVE)
+            row_drag_source.connect("prepare", self._on_row_drag_prepare, index)
+            row_drag_source.connect("drag-begin", self._on_row_drag_begin)
+            row.add_controller(row_drag_source)
+
+            row_drop_target = Gtk.DropTarget.new(GObject.TYPE_INT, Gdk.DragAction.MOVE)
+            row_drop_target.connect("drop", self._on_row_drop, index)
+            row.add_controller(row_drop_target)
+
             self.playlist_list_box.append(row)
 
-        GLib.idle_add(self._scroll_to_playing)
+        if scroll:
+            GLib.idle_add(self._scroll_to_playing)
+
+    def _on_row_drag_prepare(self, _source, _x, _y, index):
+        return Gdk.ContentProvider.new_for_value(index)
+
+    def _on_row_drag_begin(self, source, _drag):
+        source.set_icon(Gtk.WidgetPaintable.new(source.get_widget()), 0, 0)
+
+    def _on_row_drop(self, _target, source_index, _x, _y, dest_index):
+        if source_index == dest_index:
+            return
+
+        if source_index < dest_index:
+            self.mpv.command("playlist-move", source_index, dest_index + 1)
+        else:
+            self.mpv.command("playlist-move", source_index, dest_index)
+
+        self._populate_list(scroll=False)
+
+    def _on_row_right_click(self, gesture, _n_press, x, y, path):
+        def show_in_folder(parent_window, fuse_path):
+            gfile = Gio.File.new_for_path(fuse_path)
+            launcher = Gtk.FileLauncher.new(gfile)
+            launcher.open_containing_folder(parent_window, None, on_launch_finished)
+
+        def on_launch_finished(launcher, result):
+            try:
+                launcher.open_containing_folder_finish(result)
+            except Exception as e:
+                print(f"Error opening location: {e}")
+
+        def remove_from_playlist(index):
+            self.mpv.command("playlist-remove", index)
+            self._populate_list()
+
+        menu = Gio.Menu.new()
+        menu.append(_("Open Item Location"), "row.open_location")
+        menu.append(_("Remove from Playlist"), "row.remove_item")
+
+        row = gesture.get_widget()
+        index = row.get_index()
+
+        popover = Gtk.PopoverMenu.new_from_model(menu)
+        popover.set_parent(row)
+        popover.set_has_arrow(False)
+        popover.set_autohide(True)
+
+        action_group = Gio.SimpleActionGroup.new()
+
+        open_location = Gio.SimpleAction.new("open_location", None)
+        open_location.connect("activate", lambda *_: show_in_folder(self.win, path))
+        action_group.add_action(open_location)
+
+        remove_item = Gio.SimpleAction.new("remove_item", None)
+        remove_item.connect("activate", lambda *_: remove_from_playlist(index))
+        action_group.add_action(remove_item)
+
+        row.insert_action_group("row", action_group)
+
+        rect = Gdk.Rectangle()
+        rect.x = x
+        rect.y = y
+        popover.set_pointing_to(rect)
+        popover.popup()
 
     def _scroll_to_playing(self):
         if hasattr(self, "curr_playing_row") and self.curr_playing_row:
