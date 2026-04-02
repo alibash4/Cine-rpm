@@ -405,12 +405,6 @@ class CineWindow(Adw.ApplicationWindow):
         self.motion_controls_separator = Gtk.EventControllerMotion()
         self.controls_separator.add_controller(self.motion_controls_separator)
 
-        # Sometimes when opening dialogs from menu items,
-        # contains_pointer from these still returns True, even if not hovering
-        # this seems to fix it
-        self.motion_header.set_propagation_limit(Gtk.PropagationLimit.NONE)
-        self.motion_controls.set_propagation_limit(Gtk.PropagationLimit.NONE)
-
         self.connect("realize", self._on_realize)
 
         buttons = [
