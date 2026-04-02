@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: io.github.diegopvlk.Cine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-02 10:52-0300\n"
-"PO-Revision-Date: 2026-03-07 14:09+0000\n"
+"PO-Revision-Date: 2026-04-03 15:09+0000\n"
 "Last-Translator: Muhammed Al-Basha "
 "<mu7basha@users.noreply.hosted.weblate.org>\n"
 "Language-Team: Arabic <https://hosted.weblate.org/projects/cine/app/ar/>\n"
@@ -107,13 +107,11 @@ msgstr "خطأ في الملف"
 
 #: src/playlist.py:240
 msgid "Open Item Location"
-msgstr ""
+msgstr "افتح مكان العنصر"
 
 #: src/playlist.py:241
-#, fuzzy
-#| msgid "Loop Playlist"
 msgid "Remove from Playlist"
-msgstr "تكرار قائمة التشغيل"
+msgstr "حذف من قائمة التشغيل"
 
 #: src/playlist.py:300 src/window.py:634 src/playlist.blp:24 src/window.blp:99
 msgid "Add Files"
@@ -653,10 +651,8 @@ msgid "Open Audio Menu"
 msgstr "افتح قائمة الصوت"
 
 #: src/shortcuts-dialog.blp:56
-#, fuzzy
-#| msgid "Open Subtitles Menu"
 msgid "Open Chapters Menu"
-msgstr "افتح قائمة الترجمات"
+msgstr "افتح قائمة الفصول"
 
 #: src/shortcuts-dialog.blp:61
 msgid "Show Shortcuts"
@@ -695,10 +691,8 @@ msgid "Video"
 msgstr "الفيديو"
 
 #: src/window.blp:300
-#, fuzzy
-#| msgid "Chapter"
 msgid "Chapters"
-msgstr "فصل"
+msgstr "فصول"
 
 #: src/window.blp:317
 msgid "Shuffle Playlist"
