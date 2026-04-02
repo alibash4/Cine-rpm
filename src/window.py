@@ -108,6 +108,8 @@ class CineWindow(Adw.ApplicationWindow):
     audio_tracks_menu: Gio.Menu = Gtk.Template.Child()
     video_tracks_menu_button: Gtk.MenuButton = Gtk.Template.Child()
     video_tracks_menu: Gio.Menu = Gtk.Template.Child()
+    chapters_menu_button: Gtk.MenuButton = Gtk.Template.Child()
+    chapters_menu: Gio.Menu = Gtk.Template.Child()
     options_menu_button: OptionsMenuButton = Gtk.Template.Child()
     playlist_shuffle_toggle_button: Gtk.ToggleButton = Gtk.Template.Child()
     playlist_loop_toggle_button: Gtk.ToggleButton = Gtk.Template.Child()
@@ -229,6 +231,7 @@ class CineWindow(Adw.ApplicationWindow):
         self._create_action_stateful("select-subtitle", self._on_subtitle_selected, "i")
         self._create_action_stateful("select-audio", self._on_audio_selected, "i")
         self._create_action_stateful("select-video", self._on_video_selected, "i")
+        self._create_action_stateful("select-chapter", self._on_chapter_selected, "i")
         self._create_action("add-sub-tracks", self._on_add_sub_dialog)
         self._create_action("add-audio-tracks", self._on_add_audio_dialog)
         self._create_action("add-playlist-files", self._on_add_playlist_dialog)
@@ -239,6 +242,7 @@ class CineWindow(Adw.ApplicationWindow):
         self._create_action("open-playlist-dialog", self._on_open_playlist)
         self._create_action("open-sub-menu", self._on_open_sub_menu)
         self._create_action("open-audio-menu", self._on_open_audio_menu)
+        self._create_action("open-chapters-menu", self._on_open_chapters_menu)
 
         self.app.set_accels_for_action("win.open-folder", ["<primary>i"])
         self.app.set_accels_for_action("win.open-url", ["<primary>u"])
@@ -249,6 +253,7 @@ class CineWindow(Adw.ApplicationWindow):
         self.app.set_accels_for_action("win.add-playlist-files", ["<shift><primary>o"])
         self.app.set_accels_for_action("win.open-sub-menu", ["<primary>s"])
         self.app.set_accels_for_action("win.open-audio-menu", ["<primary>a"])
+        self.app.set_accels_for_action("win.open-chapters-menu", ["<primary>c"])
 
         self._create_action("quit", lambda *a: self.close())
         self.app.set_accels_for_action("win.quit", ["q", "<primary>w"])
@@ -476,6 +481,7 @@ class CineWindow(Adw.ApplicationWindow):
                     or self.subtitles_menu_button.props.active
                     or self.audio_tracks_menu_button.props.active
                     or self.video_tracks_menu_button.props.active
+                    or self.chapters_menu_button.props.active
                 )
                 if not active_or_hover:
                     self.revealer_ui.set_reveal_child(False)
@@ -709,6 +715,12 @@ class CineWindow(Adw.ApplicationWindow):
     def _on_open_audio_menu(self, *args):
         self._show_ui()
         self.audio_tracks_menu_button.popup()
+
+    def _on_open_chapters_menu(self, *args):
+        if not self.mpv.chapters:
+            return
+        self._show_ui()
+        self.chapters_menu_button.popup()
 
     def _on_open_url(self, *args, add=False):
         mode = "append-play" if add else "replace"
@@ -1008,16 +1020,27 @@ class CineWindow(Adw.ApplicationWindow):
         except mpv.ShutdownError:
             pass
 
-    def _update_chapter_marks(self, chapters):
+    def _update_chapter_marks_and_menu(self, chapters):
         if not chapters:
             self.video_progress_scale.clear_marks()
+            self.chapters_menu_button.set_visible(False)
             return
+
         for chapter in chapters:
             time_pos = chapter.get("time")
             if time_pos is not None:
                 self.video_progress_scale.add_mark(
                     float(time_pos), Gtk.PositionType.TOP, None
                 )
+
+        self.chapters_menu_button.set_visible(True)
+        self.chapters_menu.remove_all()
+
+        for i, chapter in enumerate(chapters):
+            title = chapter.get("title") or _("Chapter") + f" {i+1}"
+            item = Gio.MenuItem.new(title, None)
+            item.set_action_and_target_value("win.select-chapter", GLib.Variant("i", i))
+            self.chapters_menu.append_item(item)
 
     def _on_previous_clicked(self, _):
         pos = cast(int, self.mpv.playlist_pos)
@@ -1050,6 +1073,17 @@ class CineWindow(Adw.ApplicationWindow):
         track_id = parameter.get_int32()
         self.mpv.vid = track_id
         action.set_state(parameter)
+
+    def _on_chapter_selected(self, action, parameter):
+        chapter_index = parameter.get_int32()
+        self.mpv.chapter = chapter_index
+        action.set_state(parameter)
+
+    def _sync_chapter_menu_selected(self, index):
+        if action := self.lookup_action("select-chapter"):
+            action.set_state(  # pyright: ignore[reportAttributeAccessIssue]
+                GLib.Variant("i", index)
+            )
 
     def _update_play_pause_icon(self, is_paused):
         play_icon = "cine-playback-start-symbolic"
@@ -1671,11 +1705,16 @@ class CineWindow(Adw.ApplicationWindow):
             GLib.idle_add(update)
 
         @self.mpv.property_observer("chapter-list")
-        def on_chapters_change(_name, value):
+        def on_chapter_list_change(_name, chapters):
             self.current_chapters = (
-                sorted(value, key=lambda x: x.get("time", 0)) if value else []
+                sorted(chapters, key=lambda c: c.get("time", 0)) if chapters else []
             )
-            GLib.idle_add(self._update_chapter_marks, value)
+            GLib.idle_add(self._update_chapter_marks_and_menu, chapters)
+
+        @self.mpv.property_observer("chapter")
+        def on_chapter_change(_name, chapter_idx):
+            if chapter_idx is not None:
+                GLib.idle_add(self._sync_chapter_menu_selected, chapter_idx)
 
         @self.mpv.property_observer("pause")
         def on_pause_change(_name, paused):
