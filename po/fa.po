@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: io.github.diegopvlk.Cine\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-01 10:52-0300\n"
-"PO-Revision-Date: 2026-04-02 13:55+0000\n"
+"PO-Revision-Date: 2026-04-03 15:09+0000\n"
 "Last-Translator: Danial Behzadi <dani.behzi@ubuntu.com>\n"
 "Language-Team: Persian <https://hosted.weblate.org/projects/cine/app/fa/>\n"
 "Language: fa\n"
@@ -653,10 +653,8 @@ msgid "Open Audio Menu"
 msgstr "گشودن فهرست صدا"
 
 #: src/shortcuts-dialog.blp:56
-#, fuzzy
-#| msgid "Open Subtitles Menu"
 msgid "Open Chapters Menu"
-msgstr "گشودن فهرست زیرنویس‌ها"
+msgstr "گشودن فهرست فصل‌ها"
 
 #: src/shortcuts-dialog.blp:61
 msgid "Show Shortcuts"
@@ -695,10 +693,8 @@ msgid "Video"
 msgstr "ویدیو"
 
 #: src/window.blp:300
-#, fuzzy
-#| msgid "Chapter"
 msgid "Chapters"
-msgstr "فصل"
+msgstr "فصل‌ها"
 
 #: src/window.blp:317
 msgid "Shuffle Playlist"
