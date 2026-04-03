@@ -642,6 +642,9 @@ class CineWindow(Adw.ApplicationWindow):
     def _open_add_dialog(self, title, mode, from_playlist=False):
         filter = Gtk.FileFilter()
         dialog = Gtk.FileDialog(title=title)
+        filters_list = Gio.ListStore.new(Gtk.FileFilter)
+        filters_list.append(filter)
+        dialog.set_filters(filters_list)
         dialog.set_default_filter(filter)
 
         curr_path = self.mpv.path
