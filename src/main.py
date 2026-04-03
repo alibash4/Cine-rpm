@@ -75,9 +75,7 @@ class CineApplication(Adw.Application):
         win = CineWindow(application=self)
         win.present()
 
-    def do_open(  # pyright: ignore[reportIncompatibleMethodOverride]
-        self, gfiles, _n_files, _hint
-    ):
+    def do_open(self, files, n_files, hint):
         win: CineWindow = cast(CineWindow, self.props.active_window)
         open_new = settings.get_boolean("open-new-windows") or not win
 
@@ -86,7 +84,7 @@ class CineApplication(Adw.Application):
             win.start_page.set_visible(False)
 
             first_video_path = None
-            for gfile in gfiles:
+            for gfile in files:
                 first_video_path = self.find_first_file(gfile)
 
                 if first_video_path:
@@ -122,7 +120,7 @@ class CineApplication(Adw.Application):
             win.present()
             win.mpv.stop()
 
-        for gfile in gfiles:
+        for gfile in files:
             path = gfile.get_path() or gfile.get_uri()
             if path:
                 win.mpv.loadfile(path, "append-play")
