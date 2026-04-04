@@ -7,6 +7,7 @@ project('cine',
 i18n = import('i18n')
 gnome = import('gnome')
 
+dependency('libadwaita-1', version: '>= 1.9.0')
 
 subdir('data')
 subdir('src')
