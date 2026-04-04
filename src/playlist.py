@@ -129,7 +129,7 @@ class Playlist(Adw.Dialog):
         self._populate_list()
         self.spinner.set_visible(False)
 
-    def _populate_list(self, scroll=True):
+    def _populate_list(self, row_idx=None):
         self.playlist_list_box.remove_all()
         playlist = self.mpv.playlist
 
@@ -200,8 +200,7 @@ class Playlist(Adw.Dialog):
 
             self.playlist_list_box.append(row)
 
-        if scroll:
-            GLib.idle_add(self._scroll_to_playing)
+        GLib.idle_add(self._scroll_to_playing, row_idx)
 
     def _on_row_drag_prepare(self, _source, _x, _y, index):
         return Gdk.ContentProvider.new_for_value(index)
@@ -218,7 +217,7 @@ class Playlist(Adw.Dialog):
         else:
             self.mpv.command("playlist-move", source_index, dest_index)
 
-        self._populate_list(scroll=False)
+        self._populate_list(dest_index)
 
     def _on_row_right_click(self, gesture, _n_press, x, y, path):
         def show_in_folder():
@@ -234,7 +233,7 @@ class Playlist(Adw.Dialog):
 
         def remove_from_playlist(index):
             self.mpv.command("playlist-remove", index)
-            self._populate_list()
+            self._populate_list(index)
 
         menu = Gio.Menu.new()
         menu.append(_("Open Item Location"), "row.open_location")
@@ -247,6 +246,7 @@ class Playlist(Adw.Dialog):
         popover.set_parent(row)
         popover.set_has_arrow(False)
         popover.set_autohide(True)
+        row.connect("destroy", lambda *_: (popover.unrealize(), popover.unparent()))
 
         action_group = Gio.SimpleActionGroup.new()
 
@@ -265,9 +265,9 @@ class Playlist(Adw.Dialog):
         rect.x = x
         rect.y = y
         popover.set_pointing_to(rect)
-        popover.popup()
+        GLib.idle_add(popover.popup)
 
-    def _scroll_to_playing(self):
+    def _scroll_to_playing(self, idx=None):
         if hasattr(self, "curr_playing_row") and self.curr_playing_row:
             self.curr_playing_row.remove_css_class("playing-item-playlist")
 
@@ -284,7 +284,11 @@ class Playlist(Adw.Dialog):
         new_row = self.playlist_list_box.get_row_at_index(current_pos)
 
         if isinstance(new_row, (Gtk.Box, Adw.ActionRow)):
-            new_row.grab_focus()
+            if idx and (r := self.playlist_list_box.get_row_at_index(idx - 1)):
+                r.grab_focus()
+            else:
+                new_row.grab_focus()
+
             new_row.add_css_class("playing-item-playlist")
             new_row.add_suffix(self.playing_icon)
 
