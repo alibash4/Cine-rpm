@@ -160,6 +160,7 @@ class CineWindow(Adw.ApplicationWindow):
         self.last_preview_update: float = 0
         self.last_preview_seek: int = 0
         self.error_count: int = 0
+        self.pressed_keys: set[int] = set()
 
         self.mpv_ctx: mpv.MpvRenderContext
 
@@ -365,6 +366,8 @@ class CineWindow(Adw.ApplicationWindow):
         key_controller.connect("key-released", self._on_key_event, "keyup")
         key_controller.set_propagation_phase(Gtk.PropagationPhase.CAPTURE)
         self.add_controller(key_controller)
+
+        self.connect("notify::is-active", self._on_window_active_changed)
 
         progress_hover = Gtk.EventControllerMotion()
         progress_hover.connect("motion", self._on_progress_motion)
@@ -1283,7 +1286,24 @@ class CineWindow(Adw.ApplicationWindow):
         else:
             self.unfullscreen()
 
+    def _on_window_active_changed(self, *args):
+        if not self.pressed_keys or self.props.is_active:
+            return
+        for keyval in self.pressed_keys:
+            try:
+                self.mpv.command_async("keyup", keyval)
+            except:
+                pass
+        self.pressed_keys.clear()
+
     def _on_key_event(self, _controller, keyval, _keycode, state, event_type):
+        if event_type == "keydown":
+            if keyval in self.pressed_keys:
+                return
+            self.pressed_keys.add(keyval)
+        else:
+            self.pressed_keys.discard(keyval)
+
         key_name = Gdk.keyval_name(keyval)
 
         if event_type == "keydown":
@@ -1318,7 +1338,7 @@ class CineWindow(Adw.ApplicationWindow):
         full_combo = "+".join(mods + [mpv_key])
 
         try:
-            self.mpv.command(event_type, full_combo)
+            self.mpv.command_async(event_type, full_combo)
             return True
         except Exception:
             return
