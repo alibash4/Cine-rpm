@@ -1,6 +1,5 @@
 import os
 import gi
-from gettext import gettext as _
 from .utils import LAST_PLAYLIST_FILE
 
 gi.require_version("GLib", "2.0")

@@ -10,6 +10,7 @@ src/playlist.blp
 src/playlist.py
 src/preferences.blp
 src/preferences.py
+src/save_session.py
 src/shortcuts-dialog.blp
 src/shortcuts.py
 src/utils.py

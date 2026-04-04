@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: io.github.diegopvlk.Cine\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-02 10:52-0300\n"
+"POT-Creation-Date: 2026-04-04 17:07-0300\n"
 "PO-Revision-Date: 2026-02-28 11:40-0300\n"
 "Last-Translator: Quentin PAGÈS <quentinantonin@free.fr>\n"
 "Language-Team: Occitan <https://hosted.weblate.org/projects/cine/app/oc/>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 5.16-dev\n"
 
-#: data/io.github.diegopvlk.Cine.desktop.in:2 src/main.py:210 src/mpris.py:146
-#: src/mpris.py:364 src/window.py:169 src/window.py:280 src/window.py:1743
+#: data/io.github.diegopvlk.Cine.desktop.in:2 src/main.py:209 src/mpris.py:146
+#: src/mpris.py:364 src/window.py:170 src/window.py:284 src/window.py:1751
 #: src/window.blp:6
 msgid "Cine"
 msgstr "Cine"
@@ -87,7 +87,7 @@ msgid "Main Window"
 msgstr ""
 
 #. Translators: Replace "translator-credits" with your name/username, and optionally an email or URL.
-#: src/main.py:220
+#: src/main.py:219
 msgid "translator-credits"
 msgstr ""
 
@@ -99,25 +99,33 @@ msgstr "Títol desconegut"
 msgid "Original"
 msgstr ""
 
-#: src/playlist.py:73 src/window.py:1207 src/window.py:1583
+#: src/playlist.py:73 src/window.py:1212 src/window.py:1591
 msgid "File Error"
 msgstr ""
 
-#: src/playlist.py:240
+#: src/playlist.py:239
 msgid "Open Item Location"
 msgstr ""
 
-#: src/playlist.py:241
+#: src/playlist.py:240
 msgid "Remove from Playlist"
 msgstr ""
 
-#: src/playlist.py:300 src/window.py:634 src/playlist.blp:24 src/window.blp:99
+#: src/playlist.py:304 src/window.py:636 src/playlist.blp:24 src/window.blp:99
 msgid "Add Files"
+msgstr ""
+
+#: src/playlist.py:309 src/playlist.blp:43
+msgid "Save Playlist"
+msgstr ""
+
+#: src/playlist.py:310 src/playlist.blp:5 src/window.blp:349
+msgid "Playlist"
 msgstr ""
 
 #: src/shortcuts.py:29 src/shortcuts.py:30 src/shortcuts.py:31
 #: src/shortcuts.py:32 src/shortcuts.py:82 src/shortcuts.py:83
-#: src/window.py:1667 src/window.blp:215
+#: src/window.py:1675 src/window.blp:215
 msgid "Volume"
 msgstr "Volum"
 
@@ -151,7 +159,7 @@ msgstr ""
 msgid "Switch to Previous Subtitle Track"
 msgstr ""
 
-#: src/shortcuts.py:39 src/shortcuts.py:40 src/window.py:658 src/window.blp:272
+#: src/shortcuts.py:39 src/shortcuts.py:40 src/window.py:663 src/window.blp:272
 msgid "Audio"
 msgstr ""
 
@@ -179,7 +187,7 @@ msgstr ""
 msgid "Seek 5s Forward"
 msgstr ""
 
-#: src/shortcuts.py:45 src/shortcuts.py:46 src/window.py:1616
+#: src/shortcuts.py:45 src/shortcuts.py:46 src/window.py:1624
 #: src/window.blp:364
 msgid "Fullscreen"
 msgstr "Ecran complèt"
@@ -380,85 +388,85 @@ msgstr ""
 msgid "Miscellaneous"
 msgstr ""
 
-#: src/window.py:511 src/window.py:1199 src/window.blp:114
+#: src/window.py:513 src/window.py:1204 src/window.blp:114
 msgid "Add Subtitle Track"
 msgstr ""
 
-#: src/window.py:513 src/window.py:522
+#: src/window.py:515 src/window.py:524
 msgid "None"
 msgstr ""
 
-#: src/window.py:520 src/window.blp:119
+#: src/window.py:522 src/window.blp:119
 msgid "Add Audio Track"
 msgstr ""
 
-#: src/window.py:559
+#: src/window.py:561
 msgid "Track"
 msgstr ""
 
-#: src/window.py:602 src/playlist.blp:30 src/window.blp:104
+#: src/window.py:604 src/playlist.blp:30 src/window.blp:104
 msgid "Add Folder"
 msgstr ""
 
-#: src/window.py:602 src/shortcuts-dialog.blp:21 src/window.blp:89
+#: src/window.py:604 src/shortcuts-dialog.blp:21 src/window.blp:89
 #: src/window.blp:466
 msgid "Open Folder"
 msgstr ""
 
-#: src/window.py:631 src/shortcuts-dialog.blp:16 src/window.blp:84
+#: src/window.py:633 src/shortcuts-dialog.blp:16 src/window.blp:84
 msgid "Open Files"
 msgstr ""
 
-#: src/window.py:637
+#: src/window.py:639
 msgid "Add Subtitle"
 msgstr ""
 
-#: src/window.py:640
+#: src/window.py:642
 msgid "Add Audio"
 msgstr ""
 
-#: src/window.py:653
+#: src/window.py:658
 msgid "Subtitle"
 msgstr ""
 
-#: src/window.py:662
+#: src/window.py:667
 msgid "Media"
 msgstr ""
 
-#: src/window.py:729 src/playlist.blp:36 src/window.blp:109
+#: src/window.py:734 src/playlist.blp:36 src/window.blp:109
 msgid "Add URL"
 msgstr ""
 
-#: src/window.py:729 src/shortcuts-dialog.blp:26 src/window.blp:94
+#: src/window.py:734 src/shortcuts-dialog.blp:26 src/window.blp:94
 #: src/window.blp:476
 msgid "Open URL"
 msgstr ""
 
-#: src/window.py:742
+#: src/window.py:747
 msgid "URL"
 msgstr ""
 
-#: src/window.py:750
+#: src/window.py:755
 msgid "Add"
 msgstr ""
 
-#: src/window.py:750 src/window.blp:78
+#: src/window.py:755 src/window.blp:78
 msgid "Open"
 msgstr ""
 
-#: src/window.py:923 src/window.py:1040
+#: src/window.py:928 src/window.py:1045
 msgid "Chapter"
 msgstr ""
 
-#: src/window.py:1098
+#: src/window.py:1103
 msgid "Pause"
 msgstr ""
 
-#: src/window.py:1098 src/window.py:1203
+#: src/window.py:1103 src/window.py:1208
 msgid "Play"
 msgstr ""
 
-#: src/window.py:1616
+#: src/window.py:1624
 msgid "Exit Fullscreen"
 msgstr ""
 
@@ -559,11 +567,7 @@ msgstr ""
 msgid "Playback Speed"
 msgstr ""
 
-#: src/playlist.blp:5 src/window.blp:349
-msgid "Playlist"
-msgstr ""
-
-#: src/playlist.blp:91
+#: src/playlist.blp:98
 msgid "Add to Playlist"
 msgstr ""
 
@@ -612,14 +616,22 @@ msgid "Normalize Volume"
 msgstr ""
 
 #: src/preferences.blp:122
-msgid "Save Video Position on Close"
+msgid "Save Session on Close"
 msgstr ""
 
 #: src/preferences.blp:123
+msgid "Restore files and auto-play on startup"
+msgstr ""
+
+#: src/preferences.blp:127
+msgid "Save Video Position on Close"
+msgstr ""
+
+#: src/preferences.blp:128
 msgid "Also save options like brightness, subtitle delay, etc."
 msgstr ""
 
-#: src/preferences.blp:138
+#: src/preferences.blp:143
 msgid ""
 "Requires flatpak permission to read the folder where the video is stored"
 msgstr ""
