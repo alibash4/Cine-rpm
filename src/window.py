@@ -1593,6 +1593,7 @@ class CineWindow(Adw.ApplicationWindow):
         @self.mpv.event_callback("end-file")
         def on_end_file(event):
             GLib.idle_add(self.spinner.set_visible, False)
+            GLib.idle_add(self.start_page.set_sensitive, True)
             info = event.as_dict()
             reason = info["reason"]
 
