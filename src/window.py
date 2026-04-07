@@ -163,6 +163,7 @@ class CineWindow(Adw.ApplicationWindow):
         self.last_preview_seek: int = 0
         self.error_count: int = 0
         self.pressed_keys: set[int] = set()
+        self.key_state: Gdk.ModifierType
 
         self.mpv_ctx: mpv.MpvRenderContext
 
@@ -1314,6 +1315,7 @@ class CineWindow(Adw.ApplicationWindow):
             self._hide_ui_timeout(s=3)
             return
 
+        self.key_state = state
         clean_state = state & Gtk.accelerator_get_default_mod_mask()
         accel_name = Gtk.accelerator_name(keyval, clean_state)
         if self.app.get_actions_for_accel(accel_name):
@@ -1447,6 +1449,16 @@ class CineWindow(Adw.ApplicationWindow):
         RIGHT: str = "WHEEL_LEFT" if is_natural else "WHEEL_RIGHT"
         wheel: str | None = None
 
+        self.key_state = event.get_modifier_state()
+
+        mods = []
+        if self.key_state & Gdk.ModifierType.CONTROL_MASK:
+            mods.append("ctrl")
+        if self.key_state & Gdk.ModifierType.ALT_MASK:
+            mods.append("alt")
+        if self.key_state & Gdk.ModifierType.SHIFT_MASK:
+            mods.append("shift")
+
         # Only trigger if scrolled a full 'unit'
         if abs(dy) >= 1:
             wheel = UP if dy < 0 else DOWN
@@ -1454,7 +1466,8 @@ class CineWindow(Adw.ApplicationWindow):
             wheel = RIGHT if dx > 0 else LEFT
 
         if wheel:
-            GLib.idle_add(lambda: self.mpv.keypress(wheel))
+            combo = "+".join(mods + [wheel])
+            GLib.idle_add(lambda: self.mpv.keypress(combo))
             return True
 
     def _on_mouse_scroll_volume(self, controller, _dx, dy):
