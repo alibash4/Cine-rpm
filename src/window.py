@@ -432,6 +432,8 @@ class CineWindow(Adw.ApplicationWindow):
             self.volume_menu_button,
             self.subtitles_menu_button,
             self.audio_tracks_menu_button,
+            self.video_tracks_menu_button,
+            self.chapters_menu_button,
         ]
         for btn in buttons:
             if btn.props.popover:
