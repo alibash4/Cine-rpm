@@ -139,9 +139,13 @@ class Playlist(Adw.Dialog):
         for index, item in enumerate(playlist):
             path = item.get("filename")
 
-            if self.doc_path in path and self.save_playlist_btn.props.sensitive:
+            if (
+                self.doc_path in path
+                and self.save_playlist_btn.props.sensitive
+                and GLib.getenv("container") == "flatpak"
+            ):
                 self.save_playlist_btn.set_tooltip_text(
-                    ("Save Playlist")
+                    _("Save Playlist")
                     + " - "
                     + _(
                         "Requires flatpak permission to read the folder where the video is stored"

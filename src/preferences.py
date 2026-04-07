@@ -21,9 +21,10 @@ import gi
 
 gi.require_version("Adw", "1")
 gi.require_version("Gdk", "4.0")
+gi.require_version("GLib", "2.0")
 gi.require_version("Gio", "2.0")
 gi.require_version("Gtk", "4.0")
-from gi.repository import Adw, Gdk, Gio, Gtk
+from gi.repository import Adw, Gdk, GLib, Gio, Gtk
 
 settings = Gio.Settings.new("io.github.diegopvlk.Cine")
 
@@ -283,3 +284,8 @@ class Preferences(Adw.Dialog):
         default_font = "Adwaita Sans SemiBold"
         settings.set_string("subtitle-font", default_font)
         self.font_label.set_label(default_font)
+
+    @Gtk.Template.Callback()
+    def _on_btn_warning_realize(self, button):
+        if GLib.getenv("container") != "flatpak":
+            button.set_visible(False)
